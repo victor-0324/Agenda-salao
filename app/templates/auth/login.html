@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Entrar — Kryptacode{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h1>Entrar</h1>
+    <p class="sub">Acesse o painel do seu salão.</p>
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="field">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" required autofocus>
+      </div>
+      <div class="field">
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit">Entrar</button>
+    </form>
+    <p style="margin-top: 18px; text-align: center; font-size: 0.9rem;">
+      Ainda não tem conta? <a href="{{ url_for('auth.register') }}" style="color: var(--blue); font-weight: 700;">Criar agora</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

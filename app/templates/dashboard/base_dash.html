@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Painel — Kryptacode{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='/image/salopro.png') }}">
+</head>
+<body>
+  <div class="dash-topbar">
+    <a class="brand" href="{{ url_for('dashboard.index') }}">Krypta<span>Code</span></a>
+    <button class="nav-toggle sidebar-toggle" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="sidebar-overlay"></div>
+
+  <div class="dash-shell">
+    <aside class="dash-sidebar">
+      <a class="brand" href="{{ url_for('dashboard.index') }}">Krypta<span>Code</span></a>
+      <nav class="dash-nav">
+        <a href="{{ url_for('dashboard.index') }}" class="{{ 'active' if request.endpoint == 'dashboard.index' }}">Visão geral</a>
+        <a href="{{ url_for('dashboard.appointments') }}" class="{{ 'active' if request.endpoint == 'dashboard.appointments' }}">Agendamentos</a>
+        <a href="{{ url_for('dashboard.services') }}" class="{{ 'active' if request.endpoint in ['dashboard.services','dashboard.service_new','dashboard.service_edit'] }}">Serviços</a>
+        <a href="{{ url_for('dashboard.clients') }}" class="{{ 'active' if request.endpoint in ['dashboard.clients','dashboard.client_new','dashboard.client_edit'] }}">Clientes</a>
+        <a href="{{ url_for('dashboard.settings') }}" class="{{ 'active' if request.endpoint == 'dashboard.settings' }}">Configurações</a>
+      </nav>
+      {% if current_user.is_authenticated %}
+      <div class="salon-slug">
+        Seu link:<br>/agendar/{{ current_user.salon.slug }}
+      </div>
+      <div class="plan-tag">
+        Plano <strong>{{ PLANS[current_user.salon.plan].label }}</strong><br>
+        <a href="{{ url_for('main.pricing') }}">Fazer upgrade →</a>
+      </div>
+      <a href="{{ url_for('auth.logout') }}" style="color: var(--ink-faint); font-size: 0.82rem; margin-top: 18px; text-decoration: none;">Sair da conta</a>
+      {% endif %}
+    </aside>
+
+    <div class="dash-main">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      {% block dash_content %}{% endblock %}
+    </div>
+  </div>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

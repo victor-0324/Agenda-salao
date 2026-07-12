@@ -1,0 +1,32 @@
+{% extends "dashboard/base_dash.html" %}
+{% block title %}{{ 'Editar cliente' if client else 'Novo cliente' }} — Kryptacode{% endblock %}
+
+{% block dash_content %}
+<div class="dash-header">
+  <h1>{{ 'Editar cliente' if client else 'Novo cliente' }}</h1>
+  <a class="btn btn-ghost btn-sm" href="{{ url_for('dashboard.clients') }}">← Voltar</a>
+</div>
+
+<div class="card" style="max-width: 480px;">
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="field">
+      <label for="name">Nome</label>
+      <input type="text" id="name" name="name" value="{{ (client.name if client else form.get('name','')) }}" required>
+    </div>
+    <div class="field">
+      <label for="phone">Telefone</label>
+      <input type="tel" id="phone" name="phone" value="{{ (client.phone if client else form.get('phone','')) }}" required>
+    </div>
+    <div class="field">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" name="email" value="{{ (client.email if client else form.get('email','')) }}">
+    </div>
+    <div class="field">
+      <label for="notes">Observações</label>
+      <textarea id="notes" name="notes" rows="3">{{ (client.notes if client else form.get('notes','')) }}</textarea>
+    </div>
+    <button class="btn btn-primary btn-block" type="submit">{{ 'Salvar alterações' if client else 'Cadastrar cliente' }}</button>
+  </form>
+</div>
+{% endblock %}

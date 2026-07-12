@@ -1,0 +1,38 @@
+{% extends "dashboard/base_dash.html" %}
+{% block title %}Serviços — Kryptacode{% endblock %}
+
+{% block dash_content %}
+<div class="dash-header">
+  <h1>Serviços</h1>
+  <a class="btn btn-primary btn-sm" href="{{ url_for('dashboard.service_new') }}">+ Novo serviço</a>
+</div>
+
+<p style="margin-top: -14px; margin-bottom: 24px; font-size: 0.85rem;">
+  {{ services|length }} de {{ limits.max_services }} serviços usados no plano {{ limits.label }}.
+</p>
+
+<div class="card">
+  {% if services %}
+  <table class="responsive-table">
+    <thead><tr><th>Nome</th><th>Duração</th><th>Preço</th><th>Status</th><th>Ações</th></tr></thead>
+    <tbody>
+      {% for s in services %}
+      <tr>
+        <td data-label="Nome" class="cell-primary">{{ s.name }}</td>
+        <td data-label="Duração">{{ s.duration_min }} min</td>
+        <td data-label="Preço">{{ s.price | brl }}</td>
+        <td data-label="Status">{% if s.active %}<span class="badge badge-concluido">ativo</span>{% else %}<span class="badge badge-cancelado">inativo</span>{% endif %}</td>
+        <td data-label="Ações"><a href="{{ url_for('dashboard.service_edit', service_id=s.id) }}" style="font-weight: 700; color: var(--blue); text-decoration: none; font-size: 0.85rem;">Editar</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <h3>Nenhum serviço cadastrado</h3>
+    <p>Cadastre o primeiro serviço pra liberar sua página de agendamento.</p>
+    <a class="btn btn-primary btn-sm" href="{{ url_for('dashboard.service_new') }}">Cadastrar serviço</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

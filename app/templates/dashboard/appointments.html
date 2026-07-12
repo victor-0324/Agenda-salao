@@ -1,0 +1,48 @@
+{% extends "dashboard/base_dash.html" %}
+{% block title %}Agendamentos — Kryptacode{% endblock %}
+
+{% block dash_content %}
+<div class="dash-header">
+  <h1>Agendamentos</h1>
+  <div class="date-nav">
+    <a class="btn btn-ghost btn-sm" href="{{ url_for('dashboard.appointments', date=prev_date.isoformat()) }}">← Anterior</a>
+    <strong class="date-nav-label">{{ selected_date.strftime('%d/%m/%Y') }}</strong>
+    <a class="btn btn-ghost btn-sm" href="{{ url_for('dashboard.appointments', date=next_date.isoformat()) }}">Próximo →</a>
+  </div>
+</div>
+
+<div class="card">
+  {% if appointments %}
+  <table class="responsive-table">
+    <thead><tr><th>Horário</th><th>Cliente</th><th>Telefone</th><th>Serviço</th><th>Status</th><th>Ações</th></tr></thead>
+    <tbody>
+      {% for a in appointments %}
+      <tr>
+        <td data-label="Horário" class="cell-primary">{{ a.start_time.strftime('%H:%M') }} – {{ a.end_time.strftime('%H:%M') }}</td>
+        <td data-label="Cliente">{{ a.client.name }}</td>
+        <td data-label="Telefone">{{ a.client.phone }}</td>
+        <td data-label="Serviço">{{ a.service.name }}</td>
+        <td data-label="Status"><span class="badge badge-{{ a.status }}">{{ a.status }}</span></td>
+        <td data-label="Ações">
+          <form method="post" action="{{ url_for('dashboard.appointment_status', appt_id=a.id) }}" class="row-actions">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            {% if a.status != 'concluido' %}
+            <button class="btn btn-sm btn-ghost" name="status" value="concluido" type="submit">Concluir</button>
+            {% endif %}
+            {% if a.status != 'cancelado' %}
+            <button class="btn btn-sm btn-danger" name="status" value="cancelado" type="submit">Cancelar</button>
+            {% endif %}
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <h3>Nada agendado para este dia</h3>
+    <p>Compartilhe seu link pra clientes marcarem um horário.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

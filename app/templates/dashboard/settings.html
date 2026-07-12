@@ -1,0 +1,100 @@
+{% extends "dashboard/base_dash.html" %}
+{% block title %}Configurações — Kryptacode{% endblock %}
+
+{% block dash_content %}
+<div class="dash-header">
+  <h1>Configurações</h1>
+</div>
+
+<form method="post" enctype="multipart/form-data">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+  <div class="card" style="max-width: 560px;">
+    <h3>Perfil público</h3>
+    <p style="font-size: 0.85rem;">Isso é o que o cliente vê na sua página de agendamento, antes de escolher o serviço.</p>
+
+    <div class="photo-upload">
+      <div class="photo-preview" id="photo-preview">
+        {% if salon.profile_photo %}
+          <img src="{{ url_for('booking.media', filename=salon.profile_photo) }}" alt="Foto de perfil" id="photo-preview-img">
+        {% else %}
+          <span id="photo-preview-placeholder">{{ salon.name[:1] | upper }}</span>
+          <img src="" alt="Foto de perfil" id="photo-preview-img" style="display:none;">
+        {% endif %}
+      </div>
+      <div class="photo-upload-actions">
+        <label class="btn btn-ghost btn-sm" for="profile_photo" style="cursor:pointer;">Escolher foto</label>
+        <input type="file" id="profile_photo" name="profile_photo" accept=".png,.jpg,.jpeg,.webp" style="display:none;">
+        {% if salon.profile_photo %}
+        <label class="checkbox-row" style="font-size: 0.8rem; color: var(--ink-faint); margin-top: 8px;">
+          <input type="checkbox" name="remove_photo">
+          Remover foto atual
+        </label>
+        {% endif %}
+        <small style="display:block; margin-top: 6px;">PNG, JPG ou WEBP até 5MB.</small>
+      </div>
+    </div>
+
+    <div class="field" style="margin-top: 20px;">
+      <label for="name">Nome do salão</label>
+      <input type="text" id="name" name="name" value="{{ salon.name }}" required>
+    </div>
+
+    <div class="field">
+      <label for="address">Endereço / localização</label>
+      <input type="text" id="address" name="address" value="{{ salon.address or '' }}" placeholder="Rua, número — bairro, cidade">
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="phone">Telefone</label>
+        <input type="tel" id="phone" name="phone" value="{{ salon.phone or '' }}" placeholder="(00) 00000-0000">
+      </div>
+      <div class="field">
+        <label for="whatsapp">WhatsApp</label>
+        <input type="tel" id="whatsapp" name="whatsapp" value="{{ salon.whatsapp or '' }}" placeholder="Se diferente do telefone">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="instagram">Instagram</label>
+      <input type="text" id="instagram" name="instagram" value="{{ salon.instagram or '' }}" placeholder="@seusalao ou link completo">
+      <small>Pode informar só o @usuário ou o link completo do perfil.</small>
+    </div>
+
+    <div class="field">
+      <label>Link de agendamento</label>
+      <input type="text" value="/agendar/{{ salon.slug }}" disabled>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Horário de funcionamento</h3>
+    <p style="font-size: 0.85rem;">Defina os horários em que o salão aceita agendamentos pelo link. Marque "fechado" nos dias sem atendimento.</p>
+    <div class="hours-list">
+      {% for day in weekday_order %}
+      {% set h = salon.working_hours.get(day, {"open": "09:00", "close": "18:00", "closed": False}) %}
+      <div class="hours-row {{ 'is-closed' if h.closed }}">
+        <div class="hours-day">{{ day | weekday_pt }}</div>
+        <div class="hours-field-group">
+          <div class="field">
+            <label for="{{ day }}_open">Abre</label>
+            <input type="time" id="{{ day }}_open" name="{{ day }}_open" value="{{ h.open }}">
+          </div>
+          <div class="field">
+            <label for="{{ day }}_close">Fecha</label>
+            <input type="time" id="{{ day }}_close" name="{{ day }}_close" value="{{ h.close }}">
+          </div>
+        </div>
+        <label class="hours-closed-toggle" for="{{ day }}_closed">
+          <input type="checkbox" id="{{ day }}_closed" name="{{ day }}_closed" {% if h.closed %}checked{% endif %}>
+          Fechado
+        </label>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <button class="btn btn-primary" type="submit">Salvar configurações</button>
+</form>
+{% endblock %}

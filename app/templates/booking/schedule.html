@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendar {{ service.name }} — {{ salon.name }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="book-shell">
+    <div class="book-header">
+      <span class="eyebrow">{{ salon.name }}</span>
+      <div class="salon-name">{{ service.name }}</div>
+      <p>{{ service.duration_min }} min · {{ service.price | brl }}</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <h3 style="font-size: 1rem;">Escolha o dia</h3>
+    <div class="day-picker">
+      {% for d in next_days %}
+      <a class="day-pill {% if d == selected_date %}active{% endif %}"
+         href="{{ url_for('booking.schedule', slug=salon.slug, service_id=service.id, date=d.isoformat()) }}">
+        <span class="dow">{{ ['seg','ter','qua','qui','sex','sáb','dom'][d.weekday()] }}</span>
+        {{ d.strftime('%d/%m') }}
+      </a>
+      {% endfor %}
+    </div>
+
+    <h3 style="font-size: 1rem;">Escolha o horário</h3>
+    {% if slots %}
+    <form method="post" id="booking-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="start_time" id="start_time" value="">
+
+      <div class="slots-grid">
+        {% for s in slots %}
+        <button type="button" class="slot-btn" data-time="{{ s.strftime('%H:%M') }}">{{ s.strftime('%H:%M') }}</button>
+        {% endfor %}
+      </div>
+
+      <div id="contact-fields" style="display:none;">
+        <div class="field">
+          <label for="name">Seu nome</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+        <div class="field">
+          <label for="phone">Telefone / WhatsApp</label>
+          <input type="tel" id="phone" name="phone" required>
+        </div>
+        <div class="field">
+          <label for="email">E-mail (opcional)</label>
+          <input type="email" id="email" name="email">
+        </div>
+        <button class="btn btn-primary btn-block" type="submit">Confirmar agendamento</button>
+      </div>
+    </form>
+
+    <script>
+      const buttons = document.querySelectorAll('.slot-btn');
+      const startTimeInput = document.getElementById('start_time');
+      const contactFields = document.getElementById('contact-fields');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          startTimeInput.value = btn.dataset.time;
+          contactFields.style.display = 'block';
+          contactFields.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      });
+    </script>
+    {% else %}
+    <div class="empty-state">
+      <h3>Sem horários livres neste dia</h3>
+      <p>Escolha outra data acima.</p>
+    </div>
+    {% endif %}
+
+    <p style="text-align:center; margin-top: 30px; font-size: 0.78rem;">
+      <a href="{{ url_for('booking.salon_page', slug=salon.slug) }}" style="color: var(--ink-soft); text-decoration:none;">← Voltar aos serviços</a>
+    </p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+{% extends "dashboard/base_dash.html" %}
+{% block title %}Visão geral — Kryptacode{% endblock %}
+
+{% block dash_content %}
+<div class="dash-header">
+  <h1>Olá, {{ current_user.name.split(' ')[0] }} 👋</h1>
+  <a class="btn btn-brass btn-sm" href="{{ url_for('booking.salon_page', slug=salon.slug) }}" target="_blank">Ver minha página de agendamento ↗</a>
+
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="label">Hoje</div>
+    <div class="value">{{ today_appts|length }} <small>agendamento(s)</small></div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Próximos 7 dias</div>
+    <div class="value">{{ upcoming_count }} <small>marcados</small></div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Clientes cadastrados</div>
+    <div class="value">{{ total_clients }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Uso do plano ({{ limits.label }})</div>
+    <div class="value">{{ used_this_month }}<small>/{{ limits.max_appointments_month }}</small></div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Agenda de hoje</h3>
+  {% if today_appts %}
+  <table class="responsive-table">
+    <thead><tr><th>Horário</th><th>Cliente</th><th>Serviço</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for a in today_appts %}
+      <tr>
+        <td data-label="Horário" class="cell-primary">{{ a.start_time.strftime('%H:%M') }} – {{ a.end_time.strftime('%H:%M') }}</td>
+        <td data-label="Cliente">{{ a.client.name }}</td>
+        <td data-label="Serviço">{{ a.service.name }}</td>
+        <td data-label="Status"><span class="badge badge-{{ a.status }}">{{ a.status }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <h3>Nenhum agendamento hoje ainda</h3>
+    <p>Compartilhe seu link de agendamento pra começar a preencher a agenda.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

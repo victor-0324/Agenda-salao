@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendamento confirmado — {{ salon.name }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="book-shell">
+    <div class="confirm-box">
+      <div class="icon">✅</div>
+      <h1>Agendamento confirmado!</h1>
+      <p>Seu horário em <strong>{{ salon.name }}</strong> está reservado.</p>
+
+      <div class="card" style="text-align: left; max-width: 380px; margin: 24px auto;">
+        <p style="margin-bottom: 6px;"><strong style="color: var(--ink);">Serviço:</strong> {{ appt.service.name }}</p>
+        <p style="margin-bottom: 6px;"><strong style="color: var(--ink);">Data:</strong> {{ appt.date.strftime('%d/%m/%Y') }}</p>
+        <p style="margin-bottom: 0;"><strong style="color: var(--ink);">Horário:</strong> {{ appt.start_time.strftime('%H:%M') }} – {{ appt.end_time.strftime('%H:%M') }}</p>
+      </div>
+
+      <a class="btn btn-ghost" href="{{ url_for('booking.salon_page', slug=salon.slug) }}">Agendar outro horário</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Criar conta — Kryptacode{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card" style="max-width: 520px;">
+    <h1>Criar sua agenda</h1>
+    <p class="sub">14 dias grátis, sem cartão de crédito. Cancele quando quiser.</p>
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div class="field">
+        <label for="salon_name">Nome do salão</label>
+        <input type="text" id="salon_name" name="salon_name" value="{{ form.get('salon_name', '') }}" placeholder="Ex: Studio Bella Hair" required>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="owner_name">Seu nome</label>
+          <input type="text" id="owner_name" name="owner_name" value="{{ form.get('owner_name', '') }}" required>
+        </div>
+        <div class="field">
+          <label for="phone">Telefone</label>
+          <input type="tel" id="phone" name="phone" value="{{ form.get('phone', '') }}" placeholder="(00) 00000-0000">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" value="{{ form.get('email', '') }}" required>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="password">Senha</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <div class="field">
+          <label for="password2">Confirmar senha</label>
+          <input type="password" id="password2" name="password2" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Plano</label>
+        <div class="plan-select-row">
+          {% for key, plan in PLANS.items() %}
+          <div class="plan-radio">
+            <input type="radio" id="plan_{{ key }}" name="plan" value="{{ key }}" {% if selected_plan == key %}checked{% endif %}>
+            <label for="plan_{{ key }}">{{ plan.label }}<br><span style="font-weight: 400;">{{ plan.price | brl }}/mês</span></label>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-block" type="submit">Criar minha conta</button>
+    </form>
+    <p style="margin-top: 18px; text-align: center; font-size: 0.9rem;">
+      Já tem conta? <a href="{{ url_for('auth.login') }}" style="color: var(--blue); font-weight: 700;">Entrar</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

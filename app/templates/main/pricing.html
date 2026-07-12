@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Preços — Kryptacode{% endblock %}
+
+{% block content %}
+<section class="section container">
+  <div class="section-head" style="margin: 0 auto 44px; text-align: center; max-width: 560px;">
+    <span class="eyebrow">Preços</span>
+    <h1>Um plano pra cada fase do salão</h1>
+    <p>Todos os planos incluem agenda online 24h, página própria de agendamento e painel de controle. 14 dias de teste grátis em qualquer plano, sem cartão de crédito.</p>
+  </div>
+
+  <div class="plans-grid">
+    {% for key, plan in PLANS.items() %}
+    <div class="plan-card {% if key == 'pro' %}featured{% endif %}">
+      {% if key == 'pro' %}<span class="plan-badge">Mais escolhido</span>{% endif %}
+      <h3>{{ plan.label }}</h3>
+      <div class="plan-tagline">{{ plan.tagline }}</div>
+      <div class="plan-price">{{ plan.price | brl }}<span>/mês</span></div>
+      <ul class="plan-list">
+        {% for f in plan.features %}<li>{{ f }}</li>{% endfor %}
+      </ul>
+      <a class="btn {% if key == 'pro' %}btn-primary{% else %}btn-ghost{% endif %} btn-block" href="{{ url_for('auth.register', plano=key) }}">Começar com {{ plan.label }}</a>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="card" style="margin-top: 50px;">
+    <h3>Perguntas frequentes</h3>
+    <div style="margin-top: 18px;">
+      <p><strong style="color: var(--ink);">Posso trocar de plano depois?</strong><br>Sim, a qualquer momento direto pelo painel — nas configurações da sua conta.</p>
+      <p><strong style="color: var(--ink);">O que acontece se eu passar do limite de agendamentos do plano?</strong><br>O agendamento pelo link fica pausado até o próximo mês ou até você fazer upgrade — você não perde nenhum dado.</p>
+      <p><strong style="color: var(--ink);">Preciso instalar alguma coisa?</strong><br>Não. É tudo pelo navegador, tanto o seu painel quanto a página que o cliente usa pra agendar.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}
