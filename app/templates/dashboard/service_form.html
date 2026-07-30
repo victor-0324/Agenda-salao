@@ -1,0 +1,43 @@
+{% extends "dashboard/base_dash.html" %}
+{% block title %}{{ 'Editar serviço' if service else 'Novo serviço' }} — Kryptacode{% endblock %}
+
+{% block dash_content %}
+<div class="dash-header">
+  <h1>{{ 'Editar serviço' if service else 'Novo serviço' }}</h1>
+  <a class="btn btn-ghost btn-sm" href="{{ url_for('dashboard.services') }}">← Voltar</a>
+</div>
+
+<div class="card" style="max-width: 480px;">
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="field">
+      <label for="name">Nome do serviço</label>
+      <input type="text" id="name" name="name" value="{{ (service.name if service else form.get('name','')) }}" placeholder="Ex: Corte feminino" required>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="duration_min">Duração (minutos)</label>
+        <input type="number" id="duration_min" name="duration_min" min="5" step="5" value="{{ (service.duration_min if service else form.get('duration_min', 30)) }}" required>
+      </div>
+      <div class="field">
+        <label for="price">Preço (R$)</label>
+        <input type="text" id="price" name="price" value="{{ (service.price if service else form.get('price', '0')) }}" required>
+      </div>
+    </div>
+    {% if service %}
+    <div class="field checkbox-row">
+      <input type="checkbox" id="active" name="active" {% if service.active %}checked{% endif %}>
+      <label for="active" style="margin: 0;">Serviço ativo (aparece na página de agendamento)</label>
+    </div>
+    {% endif %}
+    <button class="btn btn-primary btn-block" type="submit">{{ 'Salvar alterações' if service else 'Cadastrar serviço' }}</button>
+  </form>
+
+  {% if service %}
+  <form method="post" action="{{ url_for('dashboard.service_delete', service_id=service.id) }}" style="margin-top: 14px;" onsubmit="return confirm('Excluir este serviço?');">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="btn btn-danger btn-block" type="submit">Excluir serviço</button>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  app:
+    image: g-krypta/agenda-salao:latest
+    command: >
+      gunicorn wsgi:app
+        --bind 0.0.0.0:5000
+        --workers 1pip
+        --timeout 180
+
+    labels:
+      - "traefik.enable=true"
+
+      # --- HTTPS somente ---
+      - "traefik.http.routers.salao_agendamento-app.rule=Host(`agenda-salao.g4conecta.com`)"
+      - "traefik.http.routers.salao_agendamento-app.entrypoints=websecure"
+      - "traefik.http.routers.salao_agendamento-app.tls.certresolver=leresolver"
+      - "traefik.http.services.salao_agendamento-app.loadbalancer.server.port=5000"
+
+    networks:
+      - traefik_public
+
+networks:
+  traefik_public:
+    external: true

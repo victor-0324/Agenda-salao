@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="{{ current_user.salon.theme if current_user.is_authenticated else 'feminino' }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Painel — Kryptacode{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='/image/salopro.png') }}">
+</head>
+<body>
+  <div class="dash-topbar">
+    <a class="brand" href="{{ url_for('dashboard.index') }}">Krypta<span>Code</span></a>
+    <button class="nav-toggle sidebar-toggle" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="sidebar-overlay"></div>
+
+  <div class="dash-shell">
+    <aside class="dash-sidebar">
+      <a class="brand" href="{{ url_for('dashboard.index') }}">
+        <span class="brand-spark">✦</span>Krypta<span>Code</span>
+      </a>
+
+      <nav class="dash-nav">
+        <a href="{{ url_for('dashboard.index') }}" class="{{ 'active' if request.endpoint == 'dashboard.index' }}">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+          Visão geral
+        </a>
+        <a href="{{ url_for('dashboard.appointments') }}" class="{{ 'active' if request.endpoint == 'dashboard.appointments' }}">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18"/><path d="M8 3v3M16 3v3"/></svg>
+          Agenda
+        </a>
+        <a href="{{ url_for('dashboard.services') }}" class="{{ 'active' if request.endpoint in ['dashboard.services','dashboard.service_new','dashboard.service_edit'] }}">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.5 15.5M14.5 14.5 20 20M8.5 8.5 12 12"/></svg>
+          Serviços
+        </a>
+        <a href="{{ url_for('dashboard.clients') }}" class="{{ 'active' if request.endpoint in ['dashboard.clients','dashboard.client_new','dashboard.client_edit'] }}">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Clientes
+        </a>
+        <a href="{{ url_for('dashboard.settings') }}" class="{{ 'active' if request.endpoint == 'dashboard.settings' }}">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Configurações
+        </a>
+      </nav>
+
+      {% if current_user.is_authenticated %}
+      <div class="sidebar-bottom">
+
+        {% if trial_salon and trial_salon.is_trial_expired %}
+        <div class="trial-box trial-expired">
+          <strong>Teste grátis encerrado</strong>
+          <p>Assine um plano para continuar recebendo agendamentos pelo seu link.</p>
+          <a class="btn btn-primary btn-sm btn-block" href="{{ url_for('main.pricing') }}">Assinar agora</a>
+        </div>
+        {% elif sidebar_plan %}
+        <div class="plan-tag">
+          <div class="plan-tag-head">
+            <span class="plan-tag-icon">👑</span>
+            <span>Plano <strong>{{ sidebar_plan.label }}</strong></span>
+          </div>
+          <div class="trial-bar"><div class="trial-bar-fill" style="width: {{ sidebar_plan.percent }}%"></div></div>
+          <div class="plan-tag-foot">
+            <span>{{ sidebar_plan.used }} / {{ sidebar_plan.limit }} agend.</span>
+            <span>{{ sidebar_plan.percent }}%</span>
+          </div>
+          {% if trial_salon and not trial_salon.is_trial_expired %}
+          <div class="plan-tag-trial">{{ trial_salon.trial_days_left }} {{ 'dia' if trial_salon.trial_days_left == 1 else 'dias' }} de teste grátis restante(s)</div>
+          {% endif %}
+          <a href="{{ url_for('main.pricing') }}">Fazer upgrade →</a>
+        </div>
+        {% endif %}
+
+        <div class="link-box">
+          <div class="link-box-label">Seu link de agendamento</div>
+          <div class="link-box-value" id="salon-link-value">/agendar/{{ current_user.salon.slug }}</div>
+          <button type="button" class="btn btn-ghost btn-sm btn-block copy-link-btn" data-copy-target="salon-link-value" data-copy-prefix="{{ request.url_root.rstrip('/') }}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span class="copy-link-label">Copiar link</span>
+          </button>
+        </div>
+
+        <a class="user-footer" href="{{ url_for('dashboard.settings') }}">
+          <span class="user-avatar">{{ current_user.name[:1] | upper }}</span>
+          <span class="user-footer-text">
+            <strong>{{ current_user.name.split(' ')[0] }}</strong>
+            <small>{{ 'Administrador(a)' if current_user.role == 'owner' else 'Equipe' }}</small>
+          </span>
+        </a>
+        <a href="{{ url_for('auth.logout') }}" class="sidebar-logout">Sair da conta</a>
+      </div>
+      {% endif %}
+    </aside>
+
+    <div class="dash-main">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      {% block dash_content %}{% endblock %}
+    </div>
+  </div>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

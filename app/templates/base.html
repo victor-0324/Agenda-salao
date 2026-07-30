@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Kryptacode — Agendamento automático para salões{% endblock %}</title>
+  <meta name="description" content="Agenda online que preenche os horários vagos do seu salão sozinha. Cadastro em 1 minutos.">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="container">
+    <nav class="nav">
+      <a class="nav-logo" href="{{ url_for('main.landing') }}">Krypta<span>code</span></a>
+      <div class="nav-links">
+        <a href="{{ url_for('main.landing') }}#como-funciona">Como funciona</a>
+        <a href="{{ url_for('main.pricing') }}">Preços</a>
+        {% if current_user.is_authenticated %}
+          <a class="btn btn-primary btn-sm" href="{{ url_for('dashboard.index') }}">Meu painel</a>
+        {% else %}
+          <a href="{{ url_for('auth.login') }}">Entrar</a>
+          <a class="btn btn-primary btn-sm" href="{{ url_for('auth.register') }}">Teste grátis</a>
+        {% endif %}
+      </div>
+      <button class="nav-toggle" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container" style="padding-top: 8px;">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer container">
+    <div>Kryptacode © 2026 — feito para salões de beleza que não querem perder horário vago.</div>
+    <div><a href="{{ url_for('main.pricing') }}">Preços</a> · <a href="{{ url_for('auth.login') }}">Entrar</a> · <a href="{{ url_for('auth.register') }}">Criar conta</a></div>
+  </footer>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

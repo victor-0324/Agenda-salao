@@ -1,0 +1,131 @@
+{% extends "dashboard/base_dash.html" %}
+{% block title %}Visão geral — Kryptacode{% endblock %}
+
+{% block dash_content %}
+
+<div class="hero-banner">
+  <div class="hero-banner-text">
+    <h1>☀️ Bom dia, {{ current_user.name.split(' ')[0] }}! ☀️</h1>
+    <p>Seu salão está pronto para receber clientes hoje.</p>
+    <div class="hero-banner-ctas">
+      <a class="btn btn-primary" href="{{ url_for('booking.salon_page', slug=salon.slug) }}" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        Novo agendamento
+      </a>
+      <button type="button" class="btn btn-ghost copy-link-btn" data-copy-target="hero-link-value" data-copy-prefix="{{ request.url_root.rstrip('/') }}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5 15.4 6.5M8.6 13.5l6.8 4"/></svg>
+        <span class="copy-link-label">Compartilhar link</span>
+      </button>
+      <span id="hero-link-value" style="display:none;">/agendar/{{ salon.slug }}</span>
+    </div>
+  </div>
+</div>
+
+<div class="stat-grid stat-grid-icons">
+  <div class="stat-card">
+    <div class="stat-icon stat-icon-pink">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18"/><path d="M8 3v3M16 3v3"/></svg>
+    </div>
+    <div class="label">Agendamentos hoje</div>
+    <div class="value">{{ today_appts|length }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon stat-icon-purple">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    <div class="label">Clientes cadastrados</div>
+    <div class="value">{{ total_clients }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon stat-icon-gold">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M15.5 9.5c0-1.4-1.6-2.5-3.5-2.5s-3.5 1.1-3.5 2.5 1.6 2 3.5 2.3 3.5 1 3.5 2.4-1.6 2.3-3.5 2.3-3.5-1-3.5-2.3"/></svg>
+    </div>
+    <div class="label">Uso do plano ({{ limits.label }})</div>
+    <div class="value">{{ used_this_month }}<small>/{{ limits.max_appointments_month }}</small></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon stat-icon-pink">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5c1.6 3.2 2.8 4.4 6 6-3.2 1.6-4.4 2.8-6 6-1.6-3.2-2.8-4.4-6-6 3.2-1.6 4.4-2.8 6-6z"/></svg>
+    </div>
+    <div class="label">Próximos 7 dias</div>
+    <div class="value">{{ upcoming_count }} <small>marcados</small></div>
+  </div>
+</div>
+
+<div class="dash-two-col">
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-head-row">
+      <h3>Agenda de hoje</h3>
+      <a class="btn btn-ghost btn-sm" href="{{ url_for('dashboard.appointments') }}">Ver agenda completa</a>
+    </div>
+    {% if today_appts %}
+    <div class="agenda-list">
+      {% for a in today_appts %}
+      <div class="agenda-row">
+        <span class="agenda-avatar">{{ a.client.name[:1] | upper }}</span>
+        <div class="agenda-row-main">
+          <strong>{{ a.client.name }}</strong>
+          <span>{{ a.service.name }} · {{ a.start_time.strftime('%H:%M') }}–{{ a.end_time.strftime('%H:%M') }}</span>
+        </div>
+        <span class="badge badge-{{ a.status }}">{{ a.status }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <h3>Nenhum agendamento hoje ainda</h3>
+      <p>Compartilhe seu link de agendamento pra começar a preencher a agenda.</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-head-row">
+      <h3>Próximos agendamentos</h3>
+    </div>
+    {% if upcoming_appts %}
+    <div class="agenda-list">
+      {% for a in upcoming_appts %}
+      <div class="agenda-row">
+        <span class="agenda-avatar">{{ a.client.name[:1] | upper }}</span>
+        <div class="agenda-row-main">
+          <strong>{{ a.client.name }}</strong>
+          <span>{{ a.service.name }} · {{ a.date.strftime('%d/%m') }} às {{ a.start_time.strftime('%H:%M') }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <a href="{{ url_for('dashboard.appointments') }}" style="font-size: 0.85rem; font-weight: 700; text-decoration: none; color: var(--blue);">Ver todos →</a>
+    {% else %}
+    <div class="empty-state">
+      <h3>Nada agendado ainda</h3>
+      <p>Assim que alguém marcar um horário, ele aparece aqui.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card">
+  <h3>Ações rápidas</h3>
+  <div class="quick-actions-grid">
+    <a class="quick-action quick-action-pink" href="{{ url_for('booking.salon_page', slug=salon.slug) }}" target="_blank">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18"/><path d="M12 13v5M9.5 15.5h5"/></svg>
+      Novo agendamento
+    </a>
+    <a class="quick-action quick-action-purple" href="{{ url_for('dashboard.client_new') }}">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+      Novo cliente
+    </a>
+    <a class="quick-action quick-action-gold" href="{{ url_for('dashboard.service_new') }}">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.5 15.5M14.5 14.5 20 20M8.5 8.5 12 12"/></svg>
+      Novo serviço
+    </a>
+    <button type="button" class="quick-action quick-action-pink copy-link-btn" data-copy-target="qa-link-value" data-copy-prefix="{{ request.url_root.rstrip('/') }}">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.5 15.4 6.5M8.6 13.5l6.8 4"/></svg>
+      <span class="copy-link-label">Compartilhar link</span>
+    </button>
+    <span id="qa-link-value" style="display:none;">/agendar/{{ salon.slug }}</span>
+  </div>
+</div>
+
+{% endblock %}
