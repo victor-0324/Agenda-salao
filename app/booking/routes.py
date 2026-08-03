@@ -107,7 +107,7 @@ def schedule(slug, service_id):
     slots = available_slots(salon, service, selected_date)
 
     if request.method == "POST":
-        limits = Config.PLANS.get(salon.plan, Config.PLANS["starter"])
+        limits = Config.PLANS.get(salon.plan, Config.PLANS["premium"])
         if salon.appointments_this_month() >= limits["max_appointments_month"]:
             flash("Este salão atingiu o limite de agendamentos do período. Tente falar diretamente com o salão.", "danger")
             return redirect(url_for("booking.schedule", slug=slug, service_id=service_id, date=selected_date.isoformat()))

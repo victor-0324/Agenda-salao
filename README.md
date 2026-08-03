@@ -4,7 +4,7 @@ SaaS de agendamento automático para salões de beleza e barbearias, feito em Fl
 
 ## O que tem pronto
 
-- **Landing page de vendas** (`/`) e **página de preços** (`/precos`) com 3 planos (Starter, Pro, Premium)
+- **Landing page de vendas** (`/`) e **página de preços** (`/precos`) com 3 planos (premium, Pro, Premium)
 - **Cadastro de salão** (`/conta/cadastro`) — cria o salão (tenant) e o usuário dono
 - **Login/logout** (`/conta/login`)
 - **Painel do salão** (`/painel`), protegido por login, sempre filtrado pelo `salon_id` do usuário logado:

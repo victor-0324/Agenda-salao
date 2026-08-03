@@ -1,54 +1,161 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
 :root {
-  /* Base escura - preto azulado, não preto puro */
-  --bg: #0A0E17;
-  --bg-soft: #121826;
-  --bg-elevated: #171F32;
-  --line: rgba(230, 236, 248, 0.10);
-  --line-strong: rgba(230, 236, 248, 0.18);
 
-  /* ---------- Tema "feminino" (padrão) - rosa/roxo neon ---------- */
-  --blue: #E31C79;
-  --blue-deep: #B01562;
-  --blue-glow: rgba(227, 28, 121, 0.20);
-  --steel: #C79BF0;
-  --steel-light: #E4CCFB;
-  --accent-2: #8B3FE8;
-  --accent-2-glow: rgba(139, 63, 232, 0.22);
+  /* ==========================================================
+     TEMA FEMININO (PADRÃO)
+     ========================================================== */
 
-  --ink: #EDF1FA;
-  --ink-soft: #97A2BC;
-  --ink-faint: #5C6785;
+  /* Fundo */
+  --bg: #120713;
+  --bg-soft: #1A0C1D;
+  --bg-elevated: #25122A;
+
+  --line: rgba(255, 170, 220, .12);
+  --line-strong: rgba(255, 170, 220, .24);
+
+  /* Cores */
+  --blue: #FF2E93;
+  --blue-deep: #E00072;
+  --blue-glow: rgba(255,46,147,.32);
+
+  --steel: #FF82CE;
+  --steel-light: #FFE2F2;
+
+  --accent-2: #D946EF;
+  --accent-2-glow: rgba(217,70,239,.28);
+
+  /* Texto */
+  --ink: #FFF5FB;
+  --ink-soft: #D9C4D5;
+  --ink-faint: #A78FA2;
   --white: #FFFFFF;
-  --danger: #F0555F;
-  --danger-bg: rgba(240, 85, 95, 0.14);
-  --success: #34C285;
-  --success-bg: rgba(52, 194, 133, 0.14);
-  --warning: #E5A94A;
-  --warning-bg: rgba(229, 169, 74, 0.14);
 
+  /* Estados */
+  --danger: #FF5C8A;
+  --danger-bg: rgba(255,92,138,.14);
+
+  --success: #38D98C;
+  --success-bg: rgba(56,217,140,.14);
+
+  --warning: #FFC857;
+  --warning-bg: rgba(255,200,87,.14);
+
+  /* Fontes */
   --font-display: 'Space Grotesk', sans-serif;
   --font-body: 'Inter', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
 
+  /* Bordas */
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 22px;
-  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.35);
-  --shadow-lift: 0 22px 60px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 0 1px var(--line), 0 20px 50px var(--blue-glow);
+
+  /* Sombras */
+  --shadow-soft: 0 10px 30px rgba(0,0,0,.35);
+
+  --shadow-lift: 0 22px 60px rgba(0,0,0,.50);
+
+  --shadow-glow:
+      0 0 0 1px var(--line),
+      0 18px 45px rgba(255,46,147,.30),
+      0 0 70px rgba(217,70,239,.18);
 }
 
-/* ---------- Tema "masculino" - azul/grafite, mais sóbrio ---------- */
+
+/* ==========================================================
+   TEMA MASCULINO
+   ========================================================== */
+
 [data-theme="masculino"] {
+
+  /* Fundo */
+  --bg: #0A0E17;
+  --bg-soft: #121826;
+  --bg-elevated: #171F32;
+
+  --line: rgba(230,236,248,.10);
+  --line-strong: rgba(230,236,248,.18);
+
+  /* Cores */
   --blue: #3D6BF0;
   --blue-deep: #2A4CC4;
-  --blue-glow: rgba(61, 107, 240, 0.18);
+  --blue-glow: rgba(61,107,240,.20);
+
   --steel: #7C8AA8;
   --steel-light: #A9B4CC;
+
   --accent-2: #2A4CC4;
-  --accent-2-glow: rgba(61, 107, 240, 0.18);
+  --accent-2-glow: rgba(61,107,240,.22);
+
+  /* Texto */
+  --ink: #EDF1FA;
+  --ink-soft: #97A2BC;
+  --ink-faint: #5C6785;
+  --white: #FFFFFF;
+
+  /* Estados */
+  --danger: #F0555F;
+  --danger-bg: rgba(240,85,95,.14);
+
+  --success: #34C285;
+  --success-bg: rgba(52,194,133,.14);
+
+  --warning: #E5A94A;
+  --warning-bg: rgba(229,169,74,.14);
+
+  /* Sombras */
+  --shadow-soft: 0 10px 30px rgba(0,0,0,.35);
+
+  --shadow-lift: 0 22px 60px rgba(0,0,0,.50);
+
+  --shadow-glow:
+      0 0 0 1px var(--line),
+      0 20px 50px var(--blue-glow);
+}
+
+
+/* ==========================================================
+   TEMA FEMININO (opcional para alternância dinâmica)
+   ========================================================== */
+
+[data-theme="feminino"] {
+
+  --bg: #120713;
+  --bg-soft: #1A0C1D;
+  --bg-elevated: #25122A;
+
+  --line: rgba(255,170,220,.12);
+  --line-strong: rgba(255,170,220,.24);
+
+  --blue: #FF2E93;
+  --blue-deep: #E00072;
+  --blue-glow: rgba(255,46,147,.32);
+
+  --steel: #FF82CE;
+  --steel-light: #FFE2F2;
+
+  --accent-2: #D946EF;
+  --accent-2-glow: rgba(217,70,239,.28);
+
+  --ink: #FFF5FB;
+  --ink-soft: #D9C4D5;
+  --ink-faint: #A78FA2;
+  --white: #FFFFFF;
+
+  --danger: #FF5C8A;
+  --danger-bg: rgba(255,92,138,.14);
+
+  --success: #38D98C;
+  --success-bg: rgba(56,217,140,.14);
+
+  --warning: #FFC857;
+  --warning-bg: rgba(255,200,87,.14);
+
+  --shadow-glow:
+      0 0 0 1px var(--line),
+      0 18px 45px rgba(255,46,147,.30),
+      0 0 70px rgba(217,70,239,.18);
 }
 
 * { box-sizing: border-box; }

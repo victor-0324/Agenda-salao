@@ -21,7 +21,7 @@ class Salon(db.Model):
     slug = db.Column(db.String(140), unique=True, nullable=False, index=True)
     email = db.Column(db.String(120), nullable=False)
     phone = db.Column(db.String(30))
-    plan = db.Column(db.String(20), default="starter", nullable=False)
+    plan = db.Column(db.String(20), default="premium", nullable=False)
     working_hours_json = db.Column(db.Text, default="{}")
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -98,7 +98,7 @@ class Salon(db.Model):
         ).count()
 
     def plan_limits(self, plans_config):
-        return plans_config.get(self.plan, plans_config["starter"])
+        return plans_config.get(self.plan, plans_config["premium"])
 
     # ---------- Teste grátis ----------
 

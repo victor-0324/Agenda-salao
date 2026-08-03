@@ -20,23 +20,37 @@ def salon():
 
 def plan_limits():
     s = salon()
-    return Config.PLANS.get(s.plan, Config.PLANS["starter"])
+    return Config.PLANS.get(s.plan, Config.PLANS["premium"])
 
 
 @dashboard_bp.context_processor
 def inject_trial_status():
-    """Deixa o status do teste grátis e o uso do plano disponíveis em todas as páginas
-    do painel, pra mostrar os avisos na sidebar sem repetir a consulta em cada view."""
+    """Disponibiliza informações do plano e do período de teste."""
     if not current_user.is_authenticated:
         return {}
+
     s = salon()
     limits = plan_limits()
     used = s.appointments_this_month()
     limit = limits["max_appointments_month"]
     percent = round(min(100, (used / limit) * 100)) if limit else 0
+
+    # Teste grátis de 7 dias
+    trial_days = 7
+    dias_desde_criacao = (datetime.utcnow() - s.created_at).days
+    trial_ativo = dias_desde_criacao < trial_days
+    dias_restantes = max(0, trial_days - dias_desde_criacao)
+
     return {
         "trial_salon": s,
-        "sidebar_plan": {"label": limits["label"], "used": used, "limit": limit, "percent": percent},
+        "trial_ativo": trial_ativo,
+        "dias_restantes_trial": dias_restantes,
+        "sidebar_plan": {
+            "label": limits["label"],
+            "used": used,
+            "limit": limit,
+            "percent": percent,
+        },
     }
 
 
@@ -68,6 +82,15 @@ def remove_profile_photo(s):
             pass
     s.profile_photo = None
 
+def obter_saudacao():
+    hora = datetime.now().hour
+
+    if 5 <= hora < 12:
+        return "☀️ Bom dia"
+    elif 12 <= hora < 18:
+        return "🌤️ Boa tarde"
+    else:
+        return "🌙 Boa noite"
 
 @dashboard_bp.route("/")
 @login_required
@@ -111,6 +134,7 @@ def index():
         total_clients=total_clients,
         used_this_month=used_this_month,
         limits=limits,
+        saudacao=obter_saudacao(),
     )
 
 

@@ -5,7 +5,7 @@
 
 <div class="hero-banner">
   <div class="hero-banner-text">
-    <h1>☀️ Bom dia, {{ current_user.name.split(' ')[0] }}! ☀️</h1>
+    <h1>{{ saudacao }}, {{ current_user.name.split(' ')[0] }}!</h1>
     <p>Seu salão está pronto para receber clientes hoje.</p>
     <div class="hero-banner-ctas">
       <a class="btn btn-primary" href="{{ url_for('booking.salon_page', slug=salon.slug) }}" target="_blank">
@@ -25,28 +25,30 @@
   <div class="stat-card">
     <div class="stat-icon stat-icon-pink">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18"/><path d="M8 3v3M16 3v3"/></svg>
-    </div>
+    </div> <br>
     <div class="label">Agendamentos hoje</div>
     <div class="value">{{ today_appts|length }}</div>
   </div>
   <div class="stat-card">
     <div class="stat-icon stat-icon-purple">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-    </div>
+    </div><br>
     <div class="label">Clientes cadastrados</div>
     <div class="value">{{ total_clients }}</div>
   </div>
+
   <div class="stat-card">
     <div class="stat-icon stat-icon-gold">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M15.5 9.5c0-1.4-1.6-2.5-3.5-2.5s-3.5 1.1-3.5 2.5 1.6 2 3.5 2.3 3.5 1 3.5 2.4-1.6 2.3-3.5 2.3-3.5-1-3.5-2.3"/></svg>
-    </div>
+    </div><br>
     <div class="label">Uso do plano ({{ limits.label }})</div>
     <div class="value">{{ used_this_month }}<small>/{{ limits.max_appointments_month }}</small></div>
   </div>
+
   <div class="stat-card">
     <div class="stat-icon stat-icon-pink">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5c1.6 3.2 2.8 4.4 6 6-3.2 1.6-4.4 2.8-6 6-1.6-3.2-2.8-4.4-6-6 3.2-1.6 4.4-2.8 6-6z"/></svg>
-    </div>
+    </div> <br>
     <div class="label">Próximos 7 dias</div>
     <div class="value">{{ upcoming_count }} <small>marcados</small></div>
   </div>
