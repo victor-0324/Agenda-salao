@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agendar em {{ salon.name }}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <meta property="og:title" content="{{ salon.name }} — Agendamento Online">
+  <meta property="og:description" content="Agende seu horário de forma rápida e prática.">
+
+  {% if salon.profile_photo %}
+  <meta property="og:image" content="{{ url_for('booking.media', filename=salon.profile_photo, _external=True) }}">
+  {% else %}
+  <meta property="og:image" content="{{ url_for('static', filename='images/default-share.jpg', _external=True) }}">
+  {% endif %}
+
+  <meta property="og:url" content="{{ request.url }}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Kryptacode">
 </head>
 <body>
   <div class="book-shell">
