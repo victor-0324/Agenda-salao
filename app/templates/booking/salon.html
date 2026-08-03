@@ -10,6 +10,7 @@
   <meta property="og:description" content="Agende seu horário de forma rápida e prática.">
 
   {% if salon.profile_photo %}
+
   <meta property="og:image" content="{{ url_for('booking.media', filename=salon.profile_photo, _external=True) }}">
   {% else %}
   <meta property="og:image" content="{{ url_for('static', filename='images/default-share.jpg', _external=True) }}">
