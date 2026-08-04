@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Kryptacode — sua agenda se preenche sozinha{% endblock %}
+{% block title %}g4conecta — sua agenda se preenche sozinha{% endblock %}
 
 {% block content %}
 <section class="hero container">
@@ -78,7 +78,7 @@
       <div style="max-width: 640px;">
         <span class="eyebrow">Por que salões trocam a agenda de papel por isso</span>
         <h2>Cada horário vago é dinheiro que não entrou naquele dia.</h2>
-        <p>Um salão de porte médio perde em média de 4 a 6 horários por semana só por não ter um jeito fácil do cliente marcar fora do horário comercial. O Kryptacode fica aberto 24h — o agendamento não depende de alguém responder mensagem.</p>
+        <p>Um salão de porte médio perde em média de 4 a 6 horários por semana só por não ter um jeito fácil do cliente marcar fora do horário comercial. O g4conecta fica aberto 24h — o agendamento não depende de alguém responder mensagem.</p>
       </div>
       <div class="grid-3" style="margin-top: 32px;">
         <div class="reveal">
@@ -98,60 +98,44 @@
   </div>
 </section>
 
-<section class="section">
-  <div class="container">
-    <div class="section-head">
-      <span class="eyebrow">O que vem incluso</span>
-      <h2>Tudo que um salão precisa pra parar de agendar no caderno</h2>
-    </div>
-    <div class="grid-3">
-      <div class="feature-card reveal">
-        <h3>Página de agendamento própria</h3>
-        <p>Com o nome do seu salão, seus serviços e preços — sem parecer um sistema genérico.</p>
-      </div>
-      <div class="feature-card reveal">
-        <h3>Cadastro automático de clientes</h3>
-        <p>Toda vez que alguém agenda pelo link, o cadastro fica salvo pra você acompanhar o histórico.</p>
-      </div>
-      <div class="feature-card reveal">
-        <h3>Painel com a agenda do dia</h3>
-        <p>Veja quem chega e a que horas, confirme, marque como concluído ou cancele em um clique.</p>
-      </div>
-      <div class="feature-card reveal">
-        <h3>Horário de funcionamento flexível</h3>
-        <p>Configure dias diferentes pra sábado, domingo ou feriado — o sistema só libera dentro do que você definir.</p>
-      </div>
-      <div class="feature-card reveal">
-        <h3>Controle de serviços e duração</h3>
-        <p>Cada serviço tem sua própria duração, então a agenda calcula o próximo horário livre automaticamente.</p>
-      </div>
-      <div class="feature-card reveal">
-        <h3>Planos que crescem com você</h3>
-        <p>Comece pequeno e mude de plano quando o salão crescer — sem trocar de sistema.</p>
-      </div>
-    </div>
-  </div>
-</section>
 
 <section class="section">
   <div class="container">
     <div class="section-head" style="margin: 0 auto 40px; text-align: center;">
-      <span class="eyebrow">Planos</span>
-      <h2>Escolha o plano do tamanho do seu salão</h2>
+      <span class="eyebrow">Plano</span>
+      <h2>Um único plano com tudo incluso</h2>
+      <p>Sem limitações de recursos. Tudo liberado desde o primeiro dia.</p>
     </div>
+
     <div class="plans-grid">
-      {% for key, plan in PLANS.items() %}
-      <div class="plan-card {% if key == 'pro' %}featured{% endif %}">
-        {% if key == 'pro' %}<span class="plan-badge">Mais escolhido</span>{% endif %}
+
+      {% set plan = PLANS['premium'] %}
+
+      <div class="plan-card featured">
+        <span class="plan-badge">Teste grátis por 14 dias</span>
+
         <h3>{{ plan.label }}</h3>
-        <div class="plan-tagline">{{ plan.tagline }}</div>
-        <div class="plan-price">{{ plan.price | brl }}<span>/mês</span></div>
+
+        <div class="plan-tagline">
+          {{ plan.tagline }}
+        </div>
+
+        <div class="plan-price">
+          {{ plan.price | brl }}<span>/mês</span>
+        </div>
+
         <ul class="plan-list">
-          {% for f in plan.features %}<li>{{ f }}</li>{% endfor %}
+          {% for f in plan.features %}
+            <li>{{ f }}</li>
+          {% endfor %}
         </ul>
-        <a class="btn {% if key == 'pro' %}btn-primary{% else %}btn-ghost{% endif %} btn-block" href="{{ url_for('auth.register', plano=key) }}">Escolher {{ plan.label }}</a>
+
+        <a class="btn btn-primary btn-block"
+           href="{{ url_for('auth.register', plano='premium') }}">
+          Começar agora
+        </a>
       </div>
-      {% endfor %}
+
     </div>
   </div>
 </section>

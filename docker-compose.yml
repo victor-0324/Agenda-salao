@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   app:
-    image: g-krypta/agenda-salao:latest
+    image: g-g4conecta/agenda-salao:latest
     command: >
       gunicorn wsgi:app
         --bind 0.0.0.0:5000

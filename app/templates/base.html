@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Kryptacode — Agendamento automático para salões{% endblock %}</title>
+  <title>{% block title %}g4conecta — Agendamento automático para salões{% endblock %}</title>
   <meta name="description" content="Agenda online que preenche os horários vagos do seu salão sozinha. Cadastro em 1 minutos.">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
   <header class="container">
     <nav class="nav">
-      <a class="nav-logo" href="{{ url_for('main.landing') }}">Krypta<span>code</span></a>
+      <a class="nav-logo" href="{{ url_for('main.landing') }}">g4conecta<span>*</span></a>
       <div class="nav-links">
         <a href="{{ url_for('main.landing') }}#como-funciona">Como funciona</a>
         <a href="{{ url_for('main.pricing') }}">Preços</a>
@@ -41,7 +41,7 @@
   </main>
 
   <footer class="footer container">
-    <div>Kryptacode © 2026 — feito para salões de beleza que não querem perder horário vago.</div>
+    <div>g4conecta © 2026 — feito para salões de beleza que não querem perder horário vago.</div>
     <div><a href="{{ url_for('main.pricing') }}">Preços</a> · <a href="{{ url_for('auth.login') }}">Entrar</a> · <a href="{{ url_for('auth.register') }}">Criar conta</a></div>
   </footer>
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>

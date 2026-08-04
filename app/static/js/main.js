@@ -1,4 +1,4 @@
-// Kryptacode — interações de UI (menu mobile, sidebar do painel, reveals)
+// g4conecta — interações de UI (menu mobile, sidebar do painel, reveals)
 document.addEventListener('DOMContentLoaded', () => {
 
   // ---------- Menu mobile do site público ----------
