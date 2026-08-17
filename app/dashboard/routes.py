@@ -186,7 +186,8 @@ def service_new():
         if errors:
             for e in errors:
                 flash(e, "danger")
-            return render_template("dashboard/service_form.html", service=None, form=request.form)
+            return render_template("dashboard/service_form.html", service=None, form=request.form, salon=current_user.salon,
+    trial_salon=current_user.salon)
 
         item = Service(salon_id=s.id, name=name, duration_min=duration, price=price, active=True)
         db.session.add(item)
@@ -194,7 +195,8 @@ def service_new():
         flash("Serviço cadastrado.", "success")
         return redirect(url_for("dashboard.services"))
 
-    return render_template("dashboard/service_form.html", service=None, form={})
+    return render_template("dashboard/service_form.html",salon=current_user.salon,
+    trial_salon=current_user.salon, service=None, form={})
 
 
 @dashboard_bp.route("/servicos/<int:service_id>/editar", methods=["GET", "POST"])
@@ -225,14 +227,16 @@ def service_edit(service_id):
         if errors:
             for e in errors:
                 flash(e, "danger")
-            return render_template("dashboard/service_form.html", service=item, form=request.form)
+            return render_template("dashboard/service_form.html", service=item, form=request.form, salon=current_user.salon,
+    trial_salon=current_user.salon)
 
         item.name, item.duration_min, item.price, item.active = name, duration, price, active
         db.session.commit()
         flash("Serviço atualizado.", "success")
         return redirect(url_for("dashboard.services"))
 
-    return render_template("dashboard/service_form.html", service=item, form={})
+    return render_template("dashboard/service_form.html", service=item, form={}, salon=current_user.salon,
+    trial_salon=current_user.salon)
 
 
 @dashboard_bp.route("/servicos/<int:service_id>/excluir", methods=["POST"])
@@ -257,7 +261,8 @@ def clients():
     if q:
         query = query.filter(Client.name.ilike(f"%{q}%"))
     items = query.order_by(Client.name).all()
-    return render_template("dashboard/clients.html", clients=items, q=q)
+    return render_template("dashboard/clients.html", clients=items, q=q, salon=current_user.salon,
+    trial_salon=current_user.salon)
 
 
 @dashboard_bp.route("/clientes/novo", methods=["GET", "POST"])
@@ -280,7 +285,8 @@ def client_new():
         flash("Cliente cadastrado.", "success")
         return redirect(url_for("dashboard.clients"))
 
-    return render_template("dashboard/client_form.html", client=None, form={})
+    return render_template("dashboard/client_form.html", client=None, form={}, salon=current_user.salon,
+    trial_salon=current_user.salon)
 
 
 @dashboard_bp.route("/clientes/<int:client_id>/editar", methods=["GET", "POST"])
@@ -298,7 +304,8 @@ def client_edit(client_id):
         flash("Cliente atualizado.", "success")
         return redirect(url_for("dashboard.clients"))
 
-    return render_template("dashboard/client_form.html", client=item, form={})
+    return render_template("dashboard/client_form.html", client=item, form={}, salon=current_user.salon,
+    trial_salon=current_user.salon)
 
 
 # ---------- Agendamentos ----------
@@ -324,6 +331,8 @@ def appointments():
         selected_date=selected_date,
         prev_date=selected_date - timedelta(days=1),
         next_date=selected_date + timedelta(days=1),
+        salon=current_user.salon,
+        trial_salon=current_user.salon
     )
 
 
