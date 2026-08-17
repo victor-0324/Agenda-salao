@@ -79,46 +79,94 @@
       {% if current_user.is_authenticated %}
       <div class="sidebar-bottom">
 
-        {% if trial_salon and trial_salon.is_trial_expired %}
-        <div class="trial-box trial-expired">
-          <strong>Teste grátis encerrado</strong>
-          <p>Assine um plano para continuar recebendo agendamentos pelo seu link.</p>
-          <a class="btn btn-primary btn-sm btn-block" href="{{ url_for('main.pricing') }}">Assinar agora</a>
-        </div>
-        <!-- -->{% elif sidebar_plan %}
-        <div class="plan-tag">
-          <div class="plan-tag-head">
-            <span class="plan-tag-icon">👑</span>
-            <span>Plano <strong>{{ sidebar_plan.label }}</strong></span>
-          </div>
-          <div class="trial-bar">
-            <div class="trial-bar-fill" style="width: {{ sidebar_plan.percent }}%"></div>
-          </div>
-          <div class="plan-tag-foot">
-            <span>{{ sidebar_plan.used }} / {{ sidebar_plan.limit }} agend.</span>
-            <span>{{ sidebar_plan.percent }}%</span>
-          </div>
-          {% if trial_salon and not trial_salon.is_trial_expired %}
-          <div class="plan-tag-trial">{{ trial_salon.trial_days_left }} {{ 'dia' if trial_salon.trial_days_left == 1
-            else 'dias' }} de teste grátis restante(s)</div>
-          {% endif %}
-          <a href="{{ url_for('main.pricing') }}">Fazer upgrade →</a>
-        </div>
-        {% endif %}
+       {% if trial_salon and trial_salon.is_trial_expired and not salon.is_subscription_active %}
 
-        <div class="link-box">
-          <div class="link-box-label">Seu link de agendamento</div>
-          <div class="link-box-value" id="salon-link-value">/agendar/{{ current_user.salon.slug }}</div>
-          <button type="button" class="btn btn-ghost btn-sm btn-block copy-link-btn" data-copy-target="salon-link-value"
-            data-copy-prefix="{{ request.url_root.rstrip('/') }}">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <rect x="9" y="9" width="13" height="13" rx="2" />
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-            </svg>
-            <span class="copy-link-label">Copiar link</span>
-          </button>
-        </div>
+          <div class="trial-box trial-expired">
+              <strong>Teste grátis encerrado</strong>
+
+              <p>
+                  Assine um plano para continuar recebendo agendamentos pelo seu link.
+              </p>
+
+              <a
+                  class="btn btn-primary btn-sm btn-block"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://pay.kiwify.com.br/5cHsAb1"
+              >
+                  Assinar agora
+              </a>
+          </div>
+
+          {% elif salon.is_subscription_active %}
+
+          <div class="plan-tag">
+
+              <div class="plan-tag-head">
+                  <span class="plan-tag-icon">👑</span>
+
+                  <span>
+                      Plano <strong>{{ salon.plan }}</strong>
+                  </span>
+              </div>
+
+              <div class="plan-tag-trial">
+                  Assinatura ativa até
+                  {{ salon.subscription_ends_at.strftime('%d/%m/%Y') }}
+              </div>
+
+              <a href="{{ url_for('main.pricing') }}">
+                  Gerenciar plano →
+              </a>
+
+          </div>
+
+          {% elif sidebar_plan %}
+
+          <div class="plan-tag">
+
+              <div class="plan-tag-head">
+                  <span class="plan-tag-icon">👑</span>
+
+                  <span>
+                      Plano <strong>{{ sidebar_plan.label }}</strong>
+                  </span>
+              </div>
+
+              <div class="trial-bar">
+                  <div
+                      class="trial-bar-fill"
+                      style="width: {{ sidebar_plan.percent }}%"
+                  ></div>
+              </div>
+
+              <div class="plan-tag-foot">
+                  <span>
+                      {{ sidebar_plan.used }} / {{ sidebar_plan.limit }} agend.
+                  </span>
+
+                  <span>
+                      {{ sidebar_plan.percent }}%
+                  </span>
+              </div>
+
+              {% if trial_salon and not trial_salon.is_trial_expired %}
+                  <div class="plan-tag-trial">
+                      {{ trial_salon.trial_days_left }}
+                      {{ 'dia' if trial_salon.trial_days_left == 1 else 'dias' }}
+                      de teste grátis restante(s)
+                  </div>
+              {% endif %}
+
+              <a href="{{ url_for('main.pricing') }}">
+                  Fazer upgrade →
+              </a>
+
+          </div>
+
+          {% endif %}
+
+
 
         <a class="user-footer" href="{{ url_for('dashboard.settings') }}">
           <span class="user-avatar">{{ current_user.name[:1] | upper }}</span>

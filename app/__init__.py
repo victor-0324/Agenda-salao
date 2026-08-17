@@ -20,12 +20,14 @@ def create_app(config_class=Config):
     def load_user(user_id):
         return User.query.get(int(user_id))
 
+    from app.api.routes import billing_bp
     from app.main.routes import main_bp
     from app.auth.routes import auth_bp
     from app.dashboard.routes import dashboard_bp
     from app.booking.routes import booking_bp
 
     app.register_blueprint(main_bp)
+    app.register_blueprint(billing_bp)
     app.register_blueprint(auth_bp, url_prefix="/conta")
     app.register_blueprint(dashboard_bp, url_prefix="/painel")
     app.register_blueprint(booking_bp, url_prefix="/agendar")
