@@ -4,14 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Painel — g4conecta{% endblock %}</title>
+  <title>{% block title %}Painel — SalonPro{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='/image/salopro.png') }}">
 </head>
 
 <body>
   <div class="dash-topbar">
-    <a class="brand" href="{{ url_for('dashboard.index') }}">g4conecta<span>*</span></a>
+    <a class="brand" href="{{ url_for('dashboard.index') }}">SalonPro<span>*</span></a>
     <button class="nav-toggle sidebar-toggle" aria-label="Abrir menu">
       <span></span><span></span><span></span>
     </button>
@@ -21,7 +21,7 @@
   <div class="dash-shell">
     <aside class="dash-sidebar">
       <a class="brand" href="{{ url_for('dashboard.index') }}">
-        <span class="brand-spark">✦</span>g4conecta<span>*</span>
+        <span class="brand-spark">✦</span>SalonPro<span>*</span>
       </a>
 
       <nav class="dash-nav">

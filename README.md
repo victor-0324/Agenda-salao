@@ -1,4 +1,4 @@
-# g4conecta
+# SalonPro
 
 SaaS de agendamento automático para salões de beleza e barbearias, feito em Flask. Multi-tenant: cada salão tem sua própria conta, seus próprios serviços, clientes e link público de agendamento.
 
