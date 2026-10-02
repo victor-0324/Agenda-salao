@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Planos — SalonPro{% endblock %}
+{% block content %}
+<section class="section container">
+  <div class="section-head section-head-centered pricing-head">
+    <span class="eyebrow">Planos</span>
+    <h1>Escolha o nível de gestão do seu salão</h1>
+    <p>Todos os planos são para 1 estabelecimento e incluem agenda online. Os recursos de equipe, financeiro e experiência do cliente crescem junto com o plano.</p>
+  </div>
+  <div class="plans-grid">
+    {% for key, plan in PLANS.items() %}
+    <div class="plan-card {% if key == 'premium' %}featured{% endif %}">
+      {% if key == 'premium' %}<span class="plan-badge">Para equipes</span>{% endif %}
+      <h3>{{ plan.label }}</h3>
+      <div class="plan-tagline">{{ plan.tagline }}</div>
+      <div class="plan-price">{{ plan.price|brl }}<span>/mês</span></div>
+      <ul class="plan-list">{% for f in plan.features %}<li>{{ f }}</li>{% endfor %}</ul>
+      <a class="btn {% if key == 'premium' %}btn-primary{% else %}btn-ghost{% endif %} btn-block" href="{{ url_for('auth.register', plano=key) }}">Começar com {{ plan.label }}</a>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="card comparison-card">
+    <h3 class="card-title-spaced">Comparativo dos planos</h3>
+    <table class="responsive-table">
+      <thead><tr><th>Recurso</th><th>Basic<br>R$ 29,90</th><th>Premium<br>R$ 59,90</th><th>Pro<br>R$ 99,90</th></tr></thead>
+      <tbody>
+        <tr><td>Estabelecimentos</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>Serviços</td><td>Limitados (10)</td><td>Ilimitados</td><td>Ilimitados</td></tr>
+        <tr><td>Profissionais</td><td>Não permite adicionar</td><td>Até 5</td><td>Mais de 5</td></tr>
+        <tr><td>Área financeira</td><td>—</td><td>✓</td><td>✓</td></tr>
+        <tr><td>Área do cliente</td><td>—</td><td>—</td><td>✓</td></tr>
+        <tr><td>Avaliações</td><td>—</td><td>—</td><td>✓</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card faq-card">
+    <h3>Perguntas frequentes</h3>
+    <div class="faq-list">
+      <p><strong>O Basic tem profissional?</strong><br>Sim. O proprietário é o profissional padrão, mas o plano Basic não permite adicionar outros profissionais.</p>
+      <p><strong>O que entra na área financeira?</strong><br>Controle de pagamentos recebidos e pendentes, forma de pagamento, visão mensal do faturamento e relatório em CSV.</p>
+      <p><strong>O que o cliente faz no Pro?</strong><br>Ativa sua área com o telefone já usado no agendamento, visualiza horários, remarca, cancela e avalia atendimentos concluídos.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

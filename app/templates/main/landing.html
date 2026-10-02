@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}SalonPro — sua agenda se preenche sozinha{% endblock %}
+
+{% block content %}
+<section class="hero container">
+  <div>
+    <span class="eyebrow">Feito para salões de beleza e barbearias</span>
+    <h1>Enquanto você atende, sua agenda se enche sozinha.</h1>
+    <p class="lead">Dá pro seu cliente um link — ele escolhe o serviço, vê os horários livres de verdade e agenda na hora, mesmo às 23h de domingo. Sem grupo de WhatsApp lotado, sem horário batendo com outro.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="{{ url_for('auth.register') }}">Começar teste grátis de 7 dias</a>
+      <a class="btn btn-ghost" href="#como-funciona">Ver como funciona</a>
+    </div>
+    <div class="hero-note">Sem cartão de crédito · Seu link fica pronto em 2 minutos</div>
+  </div>
+
+  <div class="timeline-card">
+    <div class="timeline-card-head">
+      <h4>Terça-feira — Studio Bella Hair</h4>
+      <span>hoje</span>
+    </div>
+    <div class="tl-row">
+      <span class="tl-time">09:00</span>
+      <div class="tl-slot booked">Corte + escova — Marina R.</div>
+    </div>
+    <div class="tl-row">
+      <span class="tl-time">10:00</span>
+      <div class="tl-slot free">Horário livre</div>
+    </div>
+    <div class="tl-row">
+      <span class="tl-time">11:00</span>
+      <div class="tl-slot booked">Coloração — Paula S.</div>
+    </div>
+    <div class="tl-row">
+      <span class="tl-time">13:30</span>
+      <div class="tl-slot booked">Manicure — Juliana T.</div>
+    </div>
+    <div class="tl-row">
+      <span class="tl-time">14:30</span>
+      <div class="tl-slot free">Horário livre</div>
+    </div>
+    <div class="tl-row">
+      <span class="tl-time">15:30</span>
+      <div class="tl-slot booked">Escova — Camila O. <span class="timeline-note">· agendado agora pelo link</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="como-funciona">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Como funciona</span>
+      <h2>Três passos e seu salão já está recebendo agendamento sozinho</h2>
+    </div>
+    <div class="grid-3">
+      <div class="feature-card reveal">
+        <span class="num">01</span>
+        <h3>Cadastre seus serviços e horários</h3>
+        <p>Corte, escova, coloração, manicure — cada um com sua duração e preço. Você define os dias e horários que o salão atende.</p>
+      </div>
+      <div class="feature-card reveal">
+        <span class="num">02</span>
+        <h3>Compartilhe seu link</h3>
+        <p>Cada salão ganha um link próprio, tipo <span class="inline-code">agendasalao.com/agendar/seu-salao</span>. Cole na bio do Instagram, no status do WhatsApp, onde quiser.</p>
+      </div>
+      <div class="feature-card reveal">
+        <span class="num">03</span>
+        <h3>Os horários se preenchem sozinhos</h3>
+        <p>O cliente só vê horários realmente livres — sem risco de marcar em cima de outro atendimento. Você acompanha tudo pelo painel.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="dark-band">
+      <div class="content-narrow">
+        <span class="eyebrow">Por que salões trocam a agenda de papel por isso</span>
+        <h2>Cada horário vago é dinheiro que não entrou naquele dia.</h2>
+        <p>Um salão de porte médio perde em média de 4 a 6 horários por semana só por não ter um jeito fácil do cliente marcar fora do horário comercial. O SalonPro fica aberto 24h — o agendamento não depende de alguém responder mensagem.</p>
+      </div>
+      <div class="grid-3 stats-feature-grid">
+        <div class="reveal">
+          <div class="stat-number" data-count="24h">0h</div>
+          <p class="stat-copy">agenda aberta pro cliente marcar, mesmo com o salão fechado</p>
+        </div>
+        <div class="reveal">
+          <div class="stat-number" data-count="0">0</div>
+          <p class="stat-copy">chance de dois clientes caírem no mesmo horário</p>
+        </div>
+        <div class="reveal">
+          <div class="stat-number" data-count="2 min">0 min</div>
+          <p class="stat-copy">para colocar seu salão no ar com o plano gratuito de teste</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container">
+    <div class="section-head section-head-centered">
+      <span class="eyebrow">Planos</span>
+      <h2>Comece simples e aumente os recursos conforme o salão cresce</h2>
+      <p>Basic para atendimento individual, Premium para equipes e financeiro, Pro para uma operação completa com área do cliente e avaliações.</p>
+    </div>
+
+    <div class="plans-grid">
+      {% for key, plan in PLANS.items() %}
+      <div class="plan-card {% if key == 'premium' %}featured{% endif %}">
+        {% if key == 'premium' %}<span class="plan-badge">Para equipes</span>{% endif %}
+        <h3>{{ plan.label }}</h3>
+        <div class="plan-tagline">{{ plan.tagline }}</div>
+        <div class="plan-price">{{ plan.price | brl }}<span>/mês</span></div>
+        <ul class="plan-list">{% for f in plan.features %}<li>{{ f }}</li>{% endfor %}</ul>
+        <a class="btn {% if key == 'premium' %}btn-primary{% else %}btn-ghost{% endif %} btn-block" href="{{ url_for('auth.register', plano=key) }}">Começar com {{ plan.label }}</a>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="section-link-row"><a href="{{ url_for('main.pricing') }}">Comparar todos os recursos →</a></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="dark-band dark-band-centered">
+      <h2>Seu salão pode estar recebendo agendamento pelo link hoje ainda.</h2>
+      <p class="cta-copy">Crie sua conta grátis, cadastre seus serviços e compartilhe o link. Sem fidelidade, cancele quando quiser.</p>
+      <a class="btn btn-brass" href="{{ url_for('auth.register') }}">Criar minha agenda agora</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Área do cliente — {{ salon.name }}{% endblock %}
+{% block content %}
+<section class="section container narrow-page narrow-page-sm">
+  <div class="card">
+    <span class="eyebrow">Área do cliente</span>
+    <h1 class="page-title-md">Seus agendamentos</h1>
+    <p>Entre para visualizar, remarcar ou cancelar seus horários em {{ salon.name }}.</p>
+    <form method="post" class="form-grid form-spaced">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label>Telefone<input name="phone" required placeholder="(84) 99999-9999"></label>
+      <label>Senha<input type="password" name="password" required></label>
+      <button class="btn btn-primary" type="submit">Entrar</button>
+    </form>
+    <p class="faq-list">Primeiro acesso? <a href="{{ url_for('client.activate', slug=salon.slug) }}">Ativar minha área</a></p>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "dashboard/base_dash.html" %}
+{% block title %}Profissionais — SalonPro{% endblock %}
+
+{% block dash_content %}
+<div class="dash-header">
+  <div>
+    <h1>Profissionais</h1>
+    <p class="meta">Cada profissional possui sua própria agenda, horários e serviços.</p>
+  </div>
+  {% if limits.can_add_professionals %}<a class="btn btn-primary btn-sm" href="{{ url_for('dashboard.professional_new') }}">+ Novo profissional</a>{% else %}<a class="btn btn-ghost btn-sm" href="{{ url_for('main.pricing') }}">Upgrade para adicionar</a>{% endif %}
+</div>
+
+<p class="page-meta">
+  {{ professionals|selectattr('active')|list|length }} profissional(is) ativo(s) · {% if limits.professionals_label %}{{ limits.professionals_label }}{% elif limits.can_add_professionals %}até {{ limits.max_professionals }}{% else %}sem adição de profissionais{% endif %} no plano {{ limits.label }}.
+</p>
+
+<div class="card">
+  {% if professionals %}
+  <table class="responsive-table">
+    <thead>
+      <tr><th>Profissional</th><th>Especialidade</th><th>Serviços</th><th>Status</th><th>Ações</th></tr>
+    </thead>
+    <tbody>
+      {% for p in professionals %}
+      <tr>
+        <td data-label="Profissional" class="cell-primary">{{ p.name }}</td>
+        <td data-label="Especialidade">{{ p.specialty or '—' }}</td>
+        <td data-label="Serviços">{{ p.services|length }}</td>
+        <td data-label="Status">
+          {% if p.active %}<span class="badge badge-concluido">ativo</span>{% else %}<span class="badge badge-cancelado">inativo</span>{% endif %}
+        </td>
+        <td data-label="Ações">
+          <a href="{{ url_for('dashboard.professional_edit', professional_id=p.id) }}" class="table-link">Editar agenda</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <h3>Nenhum profissional cadastrado</h3>
+    <p>Cadastre o primeiro profissional para começar a separar as agendas.</p>
+    {% if limits.can_add_professionals %}<a class="btn btn-primary btn-sm" href="{{ url_for('dashboard.professional_new') }}">Cadastrar profissional</a>{% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

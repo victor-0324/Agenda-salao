@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="{{ salon.theme }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendamento confirmado — {{ salon.name }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="booking-body">
+  <div class="book-shell">
+    <div class="confirm-box">
+      <div class="icon">✅</div>
+      <h1>Agendamento confirmado!</h1>
+      <p>Seu horário em <strong>{{ salon.name }}</strong> está reservado.</p>
+
+      <div class="card confirmation-summary">
+        <p class="summary-line"><strong class="summary-label">Serviço:</strong> {{ appt.service.name }}</p>
+        <p class="summary-line"><strong class="summary-label">Profissional:</strong> {{ appt.professional_name }}</p>
+        <p class="summary-line"><strong class="summary-label">Data:</strong> {{ appt.date.strftime('%d/%m/%Y') }}</p>
+        <p class="summary-line summary-line-last"><strong class="summary-label">Horário:</strong> {{ appt.start_time.strftime('%H:%M') }} – {{ appt.end_time.strftime('%H:%M') }}</p>
+      </div>
+
+      <a class="btn btn-ghost" href="{{ url_for('booking.salon_page', slug=salon.slug) }}">Agendar outro horário</a>
+      {% if PLANS.get(salon.plan, {}).get('client_area') %}
+      <a class="btn btn-primary confirm-secondary" href="{{ url_for('client.activate', slug=salon.slug) }}">Ativar minha área</a>
+      {% endif %}
+    </div>
+  </div>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

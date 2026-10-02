@@ -1,0 +1,111 @@
+{% extends "dashboard/base_dash.html" %}
+{% block title %}Financeiro — SalonPro{% endblock %}
+
+{% block dash_content %}
+<div class="dash-header">
+  <div>
+    <span class="page-kicker">Gestão financeira</span>
+    <h1>Financeiro</h1>
+    <p class="meta">Acompanhe recebimentos, pendências e o desempenho mensal do negócio.</p>
+  </div>
+  <a class="btn btn-ghost btn-sm" href="{{ url_for('dashboard.financial_report', month=selected_month.strftime('%Y-%m')) }}">Exportar CSV</a>
+</div>
+
+<div class="toolbar-card">
+  <form method="get" class="month-filter toolbar-field">
+    <label for="financial-month">Competência</label>
+    <input id="financial-month" type="month" name="month" value="{{ selected_month.strftime('%Y-%m') }}" onchange="this.form.submit()">
+  </form>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card metric-positive">
+    <div class="label">Recebido</div>
+    <div class="value">{{ received|brl }}</div>
+    <span class="metric-caption">Pagamentos confirmados no mês</span>
+  </div>
+  <div class="stat-card metric-warning">
+    <div class="label">A receber</div>
+    <div class="value">{{ pending|brl }}</div>
+    <span class="metric-caption">Atendimentos ainda pendentes</span>
+  </div>
+  <div class="stat-card">
+    <div class="label">Pagamentos confirmados</div>
+    <div class="value">{{ paid_count }}</div>
+    <span class="metric-caption">Movimentações conciliadas</span>
+  </div>
+</div>
+
+{% if by_method %}
+<div class="card">
+  <div class="card-head-row">
+    <div>
+      <h3>Recebido por forma de pagamento</h3>
+      <p class="meta">Distribuição dos valores confirmados no período.</p>
+    </div>
+  </div>
+  <div class="payment-method-grid">
+    {% for method, value in by_method.items() %}
+    <div class="payment-method-card">
+      <span>{{ method }}</span>
+      <strong>{{ value|brl }}</strong>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<div class="card">
+  <div class="card-head-row">
+    <div>
+      <h3>Movimentações do mês</h3>
+      <p class="meta">Atualize o status do pagamento diretamente pela linha do atendimento.</p>
+    </div>
+  </div>
+
+  {% if items %}
+  <div class="table-wrap">
+    <table class="responsive-table">
+      <thead>
+        <tr><th>Data</th><th>Cliente</th><th>Serviço</th><th>Valor</th><th>Pagamento</th><th>Ação</th></tr>
+      </thead>
+      <tbody>
+        {% for a in items %}
+        <tr>
+          <td data-label="Data" class="cell-primary">{{ a.date.strftime('%d/%m') }}</td>
+          <td data-label="Cliente">{{ a.client.name }}</td>
+          <td data-label="Serviço">{{ a.service.name }}</td>
+          <td data-label="Valor">{{ (a.paid_amount if a.paid_amount is not none else a.service.price)|brl }}</td>
+          <td data-label="Pagamento">
+            <span class="badge {% if a.payment_status == 'pago' %}badge-concluido{% else %}badge-confirmado{% endif %}">{{ a.payment_status }}</span>
+            {% if a.payment_method %}<span class="payment-method-label">{{ a.payment_method }}</span>{% endif %}
+          </td>
+          <td data-label="Ação">
+            <form method="post" action="{{ url_for('dashboard.appointment_payment', appt_id=a.id) }}" class="payment-form">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              {% if a.payment_status != 'pago' %}
+                <input aria-label="Valor recebido" name="paid_amount" value="{{ '%.2f'|format(a.service.price) }}" class="payment-amount">
+                <select aria-label="Forma de pagamento" name="payment_method">
+                  <option>Pix</option><option>Dinheiro</option><option>Cartão</option><option>Transferência</option>
+                </select>
+                <input type="hidden" name="payment_status" value="pago">
+                <button class="btn btn-primary btn-sm">Marcar pago</button>
+              {% else %}
+                <input type="hidden" name="payment_status" value="pendente">
+                <button class="btn btn-ghost btn-sm">Voltar p/ pendente</button>
+              {% endif %}
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <h3>Sem movimentações no mês</h3>
+    <p>Quando houver atendimentos neste período, eles aparecerão aqui para conciliação.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

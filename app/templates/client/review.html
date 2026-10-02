@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Avaliar atendimento — {{ salon.name }}{% endblock %}
+{% block content %}
+<section class="section container narrow-page">
+  <div class="card">
+    <span class="eyebrow">Sua opinião importa</span>
+    <h1 class="page-title-md">Avalie {{ appt.professional_name }}</h1>
+    <p>{{ appt.service.name }} · {{ appt.date.strftime('%d/%m/%Y') }}</p>
+    <form method="post" class="form-grid form-spaced">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label>Nota
+        <select name="rating" required><option value="">Selecione</option><option value="5">★★★★★ Excelente</option><option value="4">★★★★☆ Muito bom</option><option value="3">★★★☆☆ Bom</option><option value="2">★★☆☆☆ Regular</option><option value="1">★☆☆☆☆ Ruim</option></select>
+      </label>
+      <label>Comentário<textarea name="comment" rows="5" placeholder="Conte como foi sua experiência"></textarea></label>
+      <button class="btn btn-primary" type="submit">Enviar avaliação</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

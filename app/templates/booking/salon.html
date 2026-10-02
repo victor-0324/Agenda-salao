@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="{{ salon.theme }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendar em {{ salon.name }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <meta property="og:title" content="{{ salon.name }} — Agendamento Online">
+  <meta property="og:description" content="Agende seu horário de forma rápida e prática.">
+
+  {% if salon.profile_photo %}
+
+  <meta property="og:image" content="{{ url_for('booking.media', filename=salon.profile_photo, _external=True) }}">
+  {% else %}
+  <meta property="og:image" content="{{ url_for('static', filename='images/default-share.jpg', _external=True) }}">
+  {% endif %}
+
+  <meta property="og:url" content="{{ request.url }}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="SalonPro">
+</head>
+<body class="booking-body">
+  <div class="book-shell">
+    <div class="salon-profile">
+      <div class="salon-avatar">
+        {% if salon.profile_photo %}
+          <img src="{{ url_for('booking.media', filename=salon.profile_photo) }}" alt="{{ salon.name }}">
+        {% else %}
+          <span>{{ salon.name[:1] | upper }}</span>
+        {% endif %}
+      </div>
+
+      <span class="eyebrow">Agendamento online</span>
+      <div class="salon-name">{{ salon.name }}</div>
+
+      {% if salon.address %}
+      <div class="salon-address">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        {{ salon.address }}
+      </div>
+      {% endif %}
+
+      {% if salon.instagram_url or salon.whatsapp_url %}
+      <div class="salon-social">
+        {% if salon.instagram_url %}
+        <a class="social-link" href="{{ salon.instagram_url }}" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/></svg>
+          Instagram
+        </a>
+        {% endif %}
+        {% if salon.whatsapp_url %}
+        <a class="social-link" href="{{ salon.whatsapp_url }}" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          WhatsApp
+        </a>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <p class="salon-intro">Escolha o serviço para ver os horários disponíveis.</p>
+      {% if PLANS.get(salon.plan, {}).get('client_area') %}
+      <div class="danger-zone">
+        <a class="btn btn-ghost btn-sm" href="{{ url_for('client.login', slug=salon.slug) }}">Minha área · ver meus horários</a>
+      </div>
+      {% endif %}
+    </div>
+
+    {% if not salon.is_booking_active %}
+      <div class="empty-state">
+        <h3>Agendamento online indisponível</h3>
+        <p>{{ salon.name }} está com o agendamento pela internet temporariamente pausado. Entre em contato diretamente pelo telefone ou WhatsApp acima.</p>
+      </div>
+    {% elif services %}
+      {% for s in services %}
+      <a class="service-pick" href="{{ url_for('booking.schedule', slug=salon.slug, service_id=s.id) }}">
+        <div>
+          <strong>{{ s.name }}</strong><br>
+          <span class="meta">{{ s.duration_min }} min</span>
+        </div>
+        <span class="price">{{ s.price | brl }}</span>
+      </a>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">
+        <h3>Nenhum serviço disponível no momento</h3>
+        <p>Entre em contato diretamente com o salão para agendar.</p>
+      </div>
+    {% endif %}
+
+    <p class="powered-by">
+      Agenda gerenciada com <a href="{{ url_for('main.landing') }}" class="brand-link">SalonPro</a>
+    </p>
+  </div>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Meus horários — {{ salon.name }}{% endblock %}
+{% block content %}
+<section class="section container">
+  <div class="dash-header">
+    <div><span class="eyebrow">Área do cliente</span><h1>Olá, {{ client.name.split(' ')[0] }}</h1><p>Gerencie seus horários em {{ salon.name }}.</p></div>
+    <a class="btn btn-ghost btn-sm" href="{{ url_for('client.logout', slug=salon.slug) }}">Sair</a>
+  </div>
+  <div class="card">
+    {% if appointments %}
+    <div class="agenda-list">
+      {% for a in appointments %}
+      <div class="agenda-row agenda-row-top">
+        <span class="agenda-avatar">{{ a.date.strftime('%d') }}</span>
+        <div class="agenda-row-main">
+          <strong>{{ a.service.name }}</strong>
+          <span>{{ a.date.strftime('%d/%m/%Y') }} às {{ a.start_time.strftime('%H:%M') }} · {{ a.professional_name }}</span>
+          <span class="badge badge-{{ a.status }} badge-inline">{{ a.status }}</span>
+          <div class="row-actions row-actions-spaced">
+            {% if a.status not in ['cancelado','concluido'] and a.date >= today %}
+              <a class="btn btn-ghost btn-sm" href="{{ url_for('client.reschedule', slug=salon.slug, appt_id=a.id) }}">Remarcar</a>
+              <form method="post" action="{{ url_for('client.cancel', slug=salon.slug, appt_id=a.id) }}" onsubmit="return confirm('Cancelar este horário?');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-ghost btn-sm" type="submit">Cancelar</button>
+              </form>
+            {% endif %}
+            {% if a.status == 'concluido' and not a.review %}
+              <a class="btn btn-primary btn-sm" href="{{ url_for('client.review', slug=salon.slug, appt_id=a.id) }}">Avaliar atendimento</a>
+            {% elif a.review %}
+              <span class="meta">Avaliado: {{ '★' * a.review.rating }}{{ '☆' * (5-a.review.rating) }}</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}<div class="empty-state"><h3>Nenhum agendamento encontrado</h3></div>{% endif %}
+  </div>
+</section>
+{% endblock %}

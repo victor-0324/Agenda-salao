@@ -1,0 +1,77 @@
+{% extends "dashboard/base_dash.html" %}
+{% block title %}Avaliações — SalonPro{% endblock %}
+
+{% block dash_content %}
+<div class="dash-header">
+  <div>
+    <span class="page-kicker">Experiência do cliente</span>
+    <h1>Avaliações</h1>
+    <p class="meta">Acompanhe a percepção dos clientes sobre serviços e profissionais.</p>
+  </div>
+</div>
+
+<div class="stat-grid review-summary-grid">
+  <div class="stat-card">
+    <div class="label">Média geral</div>
+    <div class="value">{{ '%.1f'|format(average) }} <small class="stars">★</small></div>
+    <span class="metric-caption">Nota consolidada dos atendimentos</span>
+  </div>
+  <div class="stat-card">
+    <div class="label">Total de avaliações</div>
+    <div class="value">{{ reviews|length }}</div>
+    <span class="metric-caption">Feedbacks recebidos</span>
+  </div>
+</div>
+
+{% if professional_stats %}
+<div class="card">
+  <div class="card-head-row">
+    <div>
+      <h3>Desempenho por profissional</h3>
+      <p class="meta">Uma leitura rápida da satisfação por membro da equipe.</p>
+    </div>
+  </div>
+  <div class="professional-rating-grid">
+    {% for stat in professional_stats %}
+    <div class="professional-rating-card">
+      <span class="agenda-avatar">{{ stat.professional.name[:1]|upper }}</span>
+      <div>
+        <strong>{{ stat.professional.name }}</strong>
+        <span>{{ stat.count }} avaliação(ões)</span>
+      </div>
+      <div class="rating-score">{{ '%.1f'|format(stat.average) }} ★</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<div class="card">
+  <div class="card-head-row">
+    <div>
+      <h3>Comentários recentes</h3>
+      <p class="meta">Feedbacks deixados depois de atendimentos concluídos.</p>
+    </div>
+  </div>
+  {% if reviews %}
+  <div class="review-list">
+    {% for r in reviews %}
+    <article class="review-card">
+      <div class="review-card-head">
+        <span class="review-rating">{{ r.rating }} ★</span>
+        <span class="review-date">{{ r.created_at.strftime('%d/%m/%Y') }}</span>
+      </div>
+      <strong>{{ r.client.name }}</strong>
+      <span class="review-context">{{ r.appointment.service.name }} com {{ r.professional.name }}</span>
+      <p>{{ r.comment or 'Sem comentário.' }}</p>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <h3>Ainda não há avaliações</h3>
+    <p>Após concluir um atendimento, o cliente poderá avaliar pela área dele.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

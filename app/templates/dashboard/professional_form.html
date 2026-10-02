@@ -1,0 +1,88 @@
+{% extends "dashboard/base_dash.html" %}
+{% block title %}{{ 'Editar profissional' if professional else 'Novo profissional' }} — SalonPro{% endblock %}
+
+{% block dash_content %}
+<div class="dash-header">
+  <div>
+    <h1>{{ 'Editar profissional' if professional else 'Novo profissional' }}</h1>
+    <p class="meta">Defina os serviços e os horários em que esta pessoa atende.</p>
+  </div>
+  <a class="btn btn-ghost btn-sm" href="{{ url_for('dashboard.professionals') }}">← Voltar</a>
+</div>
+
+<div class="card form-card form-card-lg">
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="field-row">
+      <div class="field">
+        <label for="name">Nome</label>
+        <input id="name" name="name" required value="{{ professional.name if professional else '' }}" placeholder="Ex: Maria Silva">
+      </div>
+      <div class="field">
+        <label for="specialty">Especialidade</label>
+        <input id="specialty" name="specialty" value="{{ professional.specialty if professional else '' }}" placeholder="Ex: Cabeleireira, manicure">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label for="phone">Telefone</label>
+        <input id="phone" name="phone" value="{{ professional.phone if professional else '' }}">
+      </div>
+      <div class="field">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" value="{{ professional.email if professional else '' }}">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Serviços realizados</label>
+      {% if services %}
+      <div class="selection-panel">
+        {% for s in services %}
+        <label class="checkbox-row option-row">
+          <input type="checkbox" name="service_ids" value="{{ s.id }}" {% if professional and s in professional.services %}checked{% endif %}>
+          <span>{{ s.name }} · {{ s.duration_min }} min</span>
+        </label>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="meta">Você ainda não possui serviços cadastrados. Pode salvar o profissional e vincular depois.</p>
+      {% endif %}
+    </div>
+
+    <h3 class="section-subtitle">Agenda semanal</h3>
+    <p class="meta">Esses horários substituem o horário geral do salão para este profissional.</p>
+    {% set hours = professional.working_hours if professional and professional.working_hours else salon.working_hours %}
+    {% for day in weekday_order %}
+      {% set h = hours.get(day, {}) %}
+      <div class="field-row field-row-end">
+        <div class="field field-day"><label>{{ day|weekday_pt }}</label></div>
+        <div class="field"><label>Abertura</label><input type="time" name="{{ day }}_open" value="{{ h.get('open','09:00') }}"></div>
+        <div class="field"><label>Fechamento</label><input type="time" name="{{ day }}_close" value="{{ h.get('close','18:00') }}"></div>
+        <div class="field checkbox-row field-check-bottom">
+          <input type="checkbox" id="{{ day }}_closed" name="{{ day }}_closed" {% if h.get('closed') %}checked{% endif %}>
+          <label for="{{ day }}_closed" class="label-inline">Folga</label>
+        </div>
+      </div>
+    {% endfor %}
+
+    {% if professional %}
+    <div class="field checkbox-row field-check-top">
+      <input type="checkbox" id="active" name="active" {% if professional.active %}checked{% endif %}>
+      <label for="active" class="label-inline">Profissional ativo e disponível para agendamento</label>
+    </div>
+    {% endif %}
+
+    <button class="btn btn-primary btn-block" type="submit">{{ 'Salvar alterações' if professional else 'Cadastrar profissional' }}</button>
+  </form>
+
+  {% if professional %}
+  <form method="post" action="{{ url_for('dashboard.professional_delete', professional_id=professional.id) }}" class="danger-zone" onsubmit="return confirm('Remover este profissional? Se houver agenda futura ele será apenas inativado.');">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="btn btn-danger btn-block" type="submit">Remover profissional</button>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}

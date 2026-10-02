@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Remarcar horário — {{ salon.name }}{% endblock %}
+{% block content %}
+<section class="section container narrow-page narrow-page-lg">
+  <div class="card">
+    <span class="eyebrow">Remarcar</span>
+    <h1 class="page-title-md">{{ appt.service.name }}</h1>
+    <p>{{ appt.professional_name }} · escolha uma nova data e horário.</p>
+    <div class="date-strip">
+      {% for d in dates %}<a class="btn {% if d == selected_date %}btn-primary{% else %}btn-ghost{% endif %} btn-sm" href="{{ url_for('client.reschedule', slug=salon.slug, appt_id=appt.id, date=d.isoformat()) }}">{{ d.strftime('%d/%m') }}</a>{% endfor %}
+    </div>
+    <form method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="date" value="{{ selected_date.isoformat() }}">
+      <div class="slot-options">
+        {% for slot in slots %}<label class="btn btn-ghost btn-sm"><input type="radio" name="start_time" value="{{ slot.strftime('%H:%M') }}" required> {{ slot.strftime('%H:%M') }}</label>{% else %}<p>Sem horários disponíveis nesta data.</p>{% endfor %}
+      </div>
+      {% if slots %}<button class="btn btn-primary form-action-top" type="submit">Confirmar nova data</button>{% endif %}
+    </form>
+  </div>
+</section>
+{% endblock %}
